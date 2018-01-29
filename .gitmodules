@@ -1,0 +1,3 @@
+[submodule "Android-Xiaozi-Framework"]
+	path = Android-Xiaozi-Framework
+	url = git@github.com:xiaozi7912/Android-Xiaozi-Framework.git
