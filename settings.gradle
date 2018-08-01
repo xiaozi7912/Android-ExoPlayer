@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':module-framework'
+project(':module-framework').projectDir = new File('Android-Xiaozi-Framework/module-framework')
