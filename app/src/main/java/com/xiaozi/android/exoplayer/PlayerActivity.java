@@ -2,8 +2,10 @@ package com.xiaozi.android.exoplayer;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -15,6 +17,7 @@ import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
@@ -39,9 +42,7 @@ public class PlayerActivity extends BaseActivity {
     private SimpleExoPlayer mPlayer = null;
     private SurfaceView mSurfaceView = null;
 
-    private SurfaceHolder mSurfaceHolder = null;
-
-    private final static float PLAYBACK_SPEED = 1.5f;
+    private static final float PLAYBACK_SPEED = 1.0f;
 
     private String mVideoFilePath = null;
 
@@ -73,8 +74,8 @@ public class PlayerActivity extends BaseActivity {
         mPlayerView = findViewById(R.id.player_player_view);
         mSurfaceView = findViewById(R.id.player_surface_view);
 
-        mSurfaceHolder = mSurfaceView.getHolder();
-        mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
+        SurfaceHolder surfaceHolder = mSurfaceView.getHolder();
+        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 Logger.i(LOG_TAG, "surfaceCreated");
@@ -90,6 +91,13 @@ public class PlayerActivity extends BaseActivity {
             public void surfaceDestroyed(SurfaceHolder holder) {
                 Logger.i(LOG_TAG, "surfaceDestroyed");
                 if (mPlayer != null) mPlayer.release();
+            }
+        });
+
+        mSurfaceView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                throw new UnsupportedOperationException();
             }
         });
     }
@@ -182,7 +190,6 @@ public class PlayerActivity extends BaseActivity {
 
         PlaybackParameters parameters = new PlaybackParameters(PLAYBACK_SPEED, PLAYBACK_SPEED);
         mPlayer.setPlaybackParameters(parameters);
-//        mPlayerView.setPlayer(mPlayer);
     }
 
     private void playVideo(String videoFilePath) {
@@ -191,8 +198,14 @@ public class PlayerActivity extends BaseActivity {
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(mActivity,
                 Util.getUserAgent(mActivity, BuildConfig.APPLICATION_ID),
                 bandwidthMeter);
-        MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(videoFilePath));
+        MediaSource videoSource = null;
+
+        try {
+            videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(videoFilePath));
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage());
+            videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(videoFilePath));
+        }
         mPlayer.prepare(videoSource);
-//        mPlayer.setPlayWhenReady(true);
     }
 }

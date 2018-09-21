@@ -1,6 +1,7 @@
 package com.xiaozi.android.exoplayer.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xiaozi.android.exoplayer.R;
-
-import org.w3c.dom.Text;
 
 import it.sauronsoftware.ftp4j.FTPFile;
 
@@ -46,6 +45,7 @@ public class FTPFileListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Log.i(LOG_TAG, "getView");
         ViewHolder holder = null;
 
         if (convertView == null) {

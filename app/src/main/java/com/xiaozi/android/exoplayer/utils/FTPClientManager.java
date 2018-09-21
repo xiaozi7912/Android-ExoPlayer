@@ -26,7 +26,7 @@ public class FTPClientManager {
     private final String LOG_TAG = getClass().getSimpleName();
     private Context mContext = null;
     private static FTPClientManager mInstance = null;
-    private final static FTPClient mFTPClient = new FTPClient();
+    private static final FTPClient mFTPClient = new FTPClient();
 
     private int mPort = 0;
     private String mHost = null;
@@ -81,35 +81,23 @@ public class FTPClientManager {
                 mFTPClient.login(mUser, mPwd);
                 mFTPClient.changeDirectory(strings[0]);
                 return mFTPClient.list();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (FTPIllegalReplyException e) {
+            } catch (IOException | FTPIllegalReplyException | FTPDataTransferException |
+                    FTPListParseException | FTPAbortedException e) {
                 e.printStackTrace();
             } catch (FTPException e) {
                 e.printStackTrace();
                 Logger.d(LOG_TAG, "FTPException e.getCode : " + e.getCode());
                 Logger.d(LOG_TAG, "FTPException e.getMessage : " + e.getMessage());
                 mCallback.onError(e.getCode(), e.getMessage());
-            } catch (FTPDataTransferException e) {
-                e.printStackTrace();
-            } catch (FTPListParseException e) {
-                e.printStackTrace();
-            } catch (FTPAbortedException e) {
-                e.printStackTrace();
             } finally {
                 try {
                     mFTPClient.disconnect(true);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (FTPIllegalReplyException e) {
-                    e.printStackTrace();
-                } catch (FTPException e) {
-                    e.printStackTrace();
-                } catch (IllegalStateException e) {
+                } catch (IOException | FTPIllegalReplyException | FTPException |
+                        IllegalStateException e) {
                     e.printStackTrace();
                 }
             }
-            return null;
+            return new FTPFile[]{};
         }
 
         @Override
@@ -179,27 +167,18 @@ public class FTPClientManager {
                         mCallback.onFailed();
                     }
                 });
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (FTPIllegalReplyException e) {
+            } catch (IOException | FTPIllegalReplyException | FTPAbortedException |
+                    FTPDataTransferException e) {
                 e.printStackTrace();
             } catch (FTPException e) {
                 e.printStackTrace();
                 Logger.d(LOG_TAG, "FTPException e.getCode : " + e.getCode());
                 Logger.d(LOG_TAG, "FTPException e.getMessage : " + e.getMessage());
                 mCallback.onError(e.getCode(), e.getMessage());
-            } catch (FTPAbortedException e) {
-                e.printStackTrace();
-            } catch (FTPDataTransferException e) {
-                e.printStackTrace();
             } finally {
                 try {
                     mFTPClient.disconnect(true);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (FTPIllegalReplyException e) {
-                    e.printStackTrace();
-                } catch (FTPException e) {
+                } catch (IOException | FTPIllegalReplyException | FTPException e) {
                     e.printStackTrace();
                 }
             }
