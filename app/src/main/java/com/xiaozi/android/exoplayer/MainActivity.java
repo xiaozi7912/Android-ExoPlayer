@@ -44,7 +44,8 @@ public class MainActivity extends BaseActivity {
         initialize();
         initView();
         checkDownloadPathExists();
-        playVideo();
+//        playVideo();
+        playVideoDirect();
     }
 
     @Override
@@ -115,6 +116,12 @@ public class MainActivity extends BaseActivity {
                 Logger.d(LOG_TAG, "playVideo onFailure t.getLocalizedMessage : " + t.getLocalizedMessage());
             }
         });
+    }
+
+    private void playVideoDirect() {
+        Intent intent = new Intent(mActivity, PlayerActivity.class);
+        intent.putExtra("video_path", "https://manifest.googlevideo.com/api/manifest/hls_playlist/id/u5X_hiHtKkM.0/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/cmbypass/yes/goi/160/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/hls_chunk_host/r6---sn-ipoxu-un5s.googlevideo.com/playlist_type/DVR/gcr/tw/ei/MITWW4PvNZjFrQTGspqYBA/hcs/yes/initcwndbps/5800/mm/32/mn/sn-ipoxu-un5s/ms/lv/mv/m/pl/24/shardbypass/yes/dover/11/playlist_duration/30/keepalive/yes/manifest_duration/30/mt/1540785146/disable_polymer/true/ip/203.69.196.41/ipbits/0/expire/1540806801/sparams/ip,ipbits,expire,id,itag,source,requiressl,ratebypass,live,cmbypass,goi,sgoap,sgovp,hls_chunk_host,playlist_type,gcr,ei,hcs,initcwndbps,mm,mn,ms,mv,pl,shardbypass/signature/3EE247A613E6D9F91DFE23500E9C8189B6DF6FC0.67B87ACCD566B0BED45330A660F42DF7131739D7/key/dg_yt0/playlist/index.m3u8");
+        startActivity(intent);
     }
 
     private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {

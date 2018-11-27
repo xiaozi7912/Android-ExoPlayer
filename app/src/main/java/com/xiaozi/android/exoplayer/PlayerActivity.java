@@ -2,7 +2,7 @@ package com.xiaozi.android.exoplayer;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.Nullable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -14,7 +14,6 @@ import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
@@ -97,7 +96,7 @@ public class PlayerActivity extends BaseActivity {
         mSurfaceView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                throw new UnsupportedOperationException();
+//                throw new UnsupportedOperationException();
             }
         });
     }
@@ -135,7 +134,7 @@ public class PlayerActivity extends BaseActivity {
         });
         mPlayer.addListener(new Player.EventListener() {
             @Override
-            public void onTimelineChanged(Timeline timeline, Object manifest) {
+            public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
                 Logger.i(LOG_TAG, "initVideoPlayer onTimelineChanged");
             }
 
@@ -198,14 +197,16 @@ public class PlayerActivity extends BaseActivity {
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(mActivity,
                 Util.getUserAgent(mActivity, BuildConfig.APPLICATION_ID),
                 bandwidthMeter);
-        MediaSource videoSource = null;
+//        MediaSource videoSource = null;
+//
+//        try {
+//            videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(videoFilePath));
+//        } catch (Exception e) {
+//            Log.e(LOG_TAG, e.getMessage());
+//            videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(videoFilePath));
+//        }
 
-        try {
-            videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(videoFilePath));
-        } catch (Exception e) {
-            Log.e(LOG_TAG, e.getMessage());
-            videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(videoFilePath));
-        }
+        MediaSource videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(videoFilePath));
         mPlayer.prepare(videoSource);
     }
 }
